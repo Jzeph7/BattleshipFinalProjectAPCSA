@@ -22,7 +22,7 @@ public class Main
     {
         Battleship.battle();
     }
-    while(BattleShip.playerShips != 0 && BattleShip.computerShips != 0);
+    while(Battleship.numPlayerShips != 0 && Battleship.numOppShips != 0);
 
 
 
