@@ -3,7 +3,7 @@ public class Main
    public static void main(String[] args)
    {
     System.out.println("Battleship Final Project");
-    System.out.println("Map is currently empty");
+    System.out.println("Map is currently empty\n");
 
     // creates map
     Battleship.createMap();
@@ -20,8 +20,6 @@ public class Main
         Battleship.battle();
     }
     while(Battleship.numPlayerShips != 0 && Battleship.numOppShips != 0);
-
-
 
 
    }

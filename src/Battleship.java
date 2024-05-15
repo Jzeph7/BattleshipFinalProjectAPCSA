@@ -1,38 +1,32 @@
-import java.util.Scanner;
+import java.util.*;
 
 public class Battleship
 {
     // instance variables
-    protected static int numRow = 10;
-    protected static int numCol = 10;
-    protected static int numPlayerShips;
-    protected static int numOppShips;
-    protected static String[][] board = new String[numRow][numCol];
-    protected static int[][] misses = new int[numRow][numCol];
+    public static int numRow = 10;
+    public static int numCol = 10;
+    public static int numPlayerShips;
+    public static int numOppShips;
+    public static String[][] board = new String[numRow][numCol];
+    public static int[][] misses = new int[numRow][numCol];
 
 
-    
-    
     // creates the board
     public static void createMap()
     {
-        // Top part of the map
-        System.out.print(" ");
+        //First section of Ocean Map
+        System.out.print("  ");
         for(int i = 0; i < numCol; i++)
-        {
-            System.out.print(i);
-        }
+                System.out.print(i);
         System.out.println();
 
-        // Middle part of the map
-        for(int i = 0; i < board.length; i++)
-        {
-            for(int j = 0; i < board[i].length; j++)
-            {
-                board[i][j] = " "; // water sign marker
-                if(j == 0)
+        //Middle section of Ocean Map
+        for(int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                board[i][j] = " ";
+                if (j == 0)
                     System.out.print(i + "|" + board[i][j]);
-                else if(j == board[i].length -1)
+                else if (j == board[i].length - 1)
                     System.out.print(board[i][j] + "|" + i);
                 else
                     System.out.print(board[i][j]);
@@ -40,13 +34,15 @@ public class Battleship
             System.out.println();
         }
 
-        // Bottom part of the map
-        System.out.print(" ");
+        //Last section of Ocean Map
+        System.out.print("  ");
         for(int i = 0; i < numCol; i++)
         {
             System.out.print(i);
         }
         System.out.println();
+        
+    
     }
 
     // places player ships
@@ -58,19 +54,20 @@ public class Battleship
         
         // Placing five ships for player
         Battleship.numPlayerShips = 5;
-        for(int i = 1; i <= Battleship.numPlayerShips;i++)
+        for(int i = 1; i <= Battleship.numPlayerShips; )
         {
             System.out.print("Enter X coordinate for your " + i + " ship: ");
             int x = input.nextInt();
             System.out.print("Enter your Y coordinate for your " + i + " ship: ");
             int y = input.nextInt();
+            System.out.println();
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (board[x][y] == " "))
             {
-                board[x][y] = "X"; // Player ship marker
+                board[y][x] = "X"; // Player ship marker
                 i++;
             }
-            else if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (board[x][y] == "X"))
+            else if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && board[x][y] == "X")
             {
                 System.out.println("You can't place two or more ships on the same coordinate.");
                 continue;
@@ -83,7 +80,6 @@ public class Battleship
         }
         displayMap();
 
-        input.close();
     }
 
     // places opponents ships
@@ -100,7 +96,7 @@ public class Battleship
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (board[x][y] == " "))
             {
-                board[x][y] = "O"; // Computer ship marker
+                board[y][x] = "O"; // Computer ship marker
                 System.out.println(i + ". ship placed");
                 i++;
             }
@@ -136,30 +132,31 @@ public class Battleship
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol)) // In map guess
             {
-                if(board[x][y] == "O")
+                if(board[y][x] == "O")
                 {
                     System.out.println("BOOM! You sunk their ship!");
-                    board[x][y] = "!"; // Hit
+                    board[y][x] = "!"; // Hit
                     --Battleship.numOppShips;
                 }
-                else if(board[x][y] == "X")
+                else if(board[y][x] == "X")
                 {
                     System.out.println("You sunk your OWN ship!");
-                    board[x][y] = "*"; // Sunk own ship marker
+                    board[y][x] = "*"; // Sunk own ship marker
                     --Battleship.numPlayerShips;
                     ++Battleship.numOppShips;
                 }
-                else if(board[x][y] == " ")
+                else if(board[y][x] == " ")
                 {
                     System.out.println("You missed.");
-                    board[x][y] = "-";
+                    board[y][x] = "-";
                 }
             }
             else if((x < 0 || x >= numRow) || (y < 0 || y >= numCol)) // outside map
             {
                 System.out.println("You can't place ships outside the map.");
             }
-            input.close();
+            
+
 
         }while((x < 0 || x >= numRow) || (y < 0 || y >= numCol)); // keep asking until valid guess
 
@@ -180,25 +177,25 @@ public class Battleship
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol)) // valid guess
             {
-                if(board[x][y] == "X")
+                if(board[y][x] == "X")
                 {
                     System.out.println("BOOM! The opponent sunk one of your ships!");
-                    board[x][y] = "*";
+                    board[y][x] = "*";
                     --Battleship.numPlayerShips;
                     ++Battleship.numOppShips;
                 }
-                else if(board[x][y] == "O")
+                else if(board[y][x] == "O")
                 {
                     System.out.println("The oppoent has sunk one");
-                    board[x][y] = "!";
+                    board[y][x] = "!";
                 }
-                else if(board[x][y] == " ")
+                else if(board[y][x] == " ")
                 {
                     System.out.println("Opponent missed.");
                     
-                    if(Battleship.misses[x][y] != 1)
+                    if(Battleship.misses[y][x] != 1)
                     {
-                        misses[x][y] = 1;
+                        misses[y][x] = 1;
                     }
                     
                 }
@@ -227,7 +224,7 @@ public class Battleship
         System.out.println();
 
         // First section of map
-        System.out.print(" ");
+        System.out.print("  ");
         for(int i = 0; i < numCol; i++)
         {
             System.out.print(i);
@@ -247,7 +244,7 @@ public class Battleship
         }
 
         // Last section of map
-        System.out.print(" ");
+        System.out.print("  ");
         for(int i = 0; i < numCol; i++)
         {
             System.out.print(i);
