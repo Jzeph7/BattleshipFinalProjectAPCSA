@@ -25,7 +25,7 @@ public class Main
     }
     while(Battleship.numPlayerShips != 0 && Battleship.numOppShips != 0);
 
-    BattleShip.gameOver();
+    Battleship.gameOver();
 
 
    }

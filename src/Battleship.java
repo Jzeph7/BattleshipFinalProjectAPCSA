@@ -16,13 +16,13 @@ public class Battleship
     // creates the player board
     public static void createPlayerMap()
     {
-        //First section of Ocean Map
+        // Top part of map (x-axis)
         System.out.print("  ");
         for(int i = 0; i < numCol; i++)
                 System.out.print(i);
         System.out.println();
 
-        //Middle section of Ocean Map
+        // Middle part of map (empty spaces and y-axis)
         for(int i = 0; i < playerBoard.length; i++) {
             for (int j = 0; j < playerBoard[i].length; j++) {
                 playerBoard[i][j] = " ";
@@ -36,7 +36,7 @@ public class Battleship
             System.out.println();
         }
 
-        //Last section of Ocean Map
+        // Bottom part of map (x-axis)
         System.out.print("  ");
         for(int i = 0; i < numCol; i++)
         {
@@ -47,16 +47,18 @@ public class Battleship
     
     }
 
-        public static void createOppMap()
+
+    public static void createOppMap()
     {
-        //First section of Ocean Map
+        // First section of Ocean Map
         /*System.out.print("  ");
         for(int i = 0; i < numCol; i++)
                 System.out.print(i);
         System.out.println();
         */
         //Middle section of Ocean Map
-        for(int i = 0; i < oppBoard.length; i++) {
+        for(int i = 0; i < oppBoard.length; i++) 
+        {
             for (int j = 0; j < oppBoard[i].length; j++) 
             {
                 oppBoard[i][j] = " ";
@@ -99,12 +101,12 @@ public class Battleship
             int y = input.nextInt();
             System.out.println();
 
-            if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (playerBoard[x][y] == " "))
+            if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (playerBoard[x][y].equals(" ")))
             {
                 playerBoard[y][x] = "X"; // Player ship marker
                 i++;
             }
-            else if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && playerBoard[x][y] == "X")
+            else if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && playerBoard[x][y].equals("X"))
             {
                 System.out.println("You can't place two or more ships on the same coordinate.");
                 continue;
@@ -122,7 +124,7 @@ public class Battleship
     // places opponents ships
     public static void placeOppShip()
     {
-        System.out.println("\nComputer is placing ships");
+        System.out.println("\nOpponent is placing ships");
 
         //Placing five ships for oppoenet 
         Battleship.numOppShips = 5;
@@ -131,14 +133,14 @@ public class Battleship
             int x = (int)(Math.random() * 10);
             int y = (int)(Math.random() * 10);
 
-            if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (oppBoard[x][y] == " "))
+            if((x >= 0 && x < numRow) && (y >= 0 && y < numCol) && (!playerBoard[y][x].equals("X")) && (oppBoard[y][x].equals(" ")))
             {
                 oppBoard[y][x] = "O"; // Computer ship marker
-                System.out.println(i + ". ship placed");
+                System.out.println("Opponent ship " + i + " placed.");
                 i++;
             }
         }
-        displayMap();
+        //displayMap();
     }
 
     // battle method
@@ -161,6 +163,7 @@ public class Battleship
         int y = -1;
         do
         {
+            // getting player x and y guesses
             Scanner input = new Scanner(System.in);
             System.out.println("Enter X coordinate: ");
             x = input.nextInt();
@@ -169,20 +172,25 @@ public class Battleship
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol)) // In map guess
             {
-                if(oppBoard[y][x] == "O")
+                // player hits opponent's ship
+                if(oppBoard[y][x].equals("O"))
                 {
                     System.out.println("BOOM! You sunk their ship!");
                     oppBoard[y][x] = "!"; // Hit
                     playerBoard[y][x] = "!"; // Hit
                     --Battleship.numOppShips;
                 }
-                else if(playerBoard[y][x] == "X")
+
+                // player hits their own ship
+                else if(playerBoard[y][x].equals("X"))
                 {
                     System.out.println("You sunk your OWN ship!");
                     playerBoard[y][x] = "*"; // Sunk own ship marker
                     --Battleship.numPlayerShips;
                 }
-                else if(oppBoard[y][x] == " ")
+
+                // player misses
+                else if(oppBoard[y][x].equals(" "))
                 {
                     System.out.println("You missed.");
                     playerBoard[y][x] = "-";
@@ -209,26 +217,35 @@ public class Battleship
         int y = -1;
         do
         {
+            // x and y coordinate randomizer
             x = (int)(Math.random() * 10);
             y = (int)(Math.random() * 10);
 
             if((x >= 0 && x < numRow) && (y >= 0 && y < numCol)) // valid guess
             {
-                if(playerBoard[y][x] == "X")
+                // opponent hits player board
+                if(playerBoard[y][x].equals("X"))
                 {
                     System.out.println("BOOM! The opponent sunk one of your ships!");
                     playerBoard[y][x] = "*";
                     --Battleship.numPlayerShips;
                 }
-                else if(oppBoard[y][x] == "O")
+
+                // opponent hits their own board
+                else if(oppBoard[y][x].equals("O"))
                 {
-                    System.out.println("The oppoent has sunk their own ship.");
+                    System.out.println("The opponent has sunk their own ship.");
                     playerBoard[y][x] = "!";
                     oppBoard[y][x] = "!";
+                    --Battleship.numOppShips;
                 }
-                else if(playerBoard[y][x] == " ")
+
+                // opponent misses 
+                else if(playerBoard[y][x].equals(" ") || playerBoard[y][x].equals("-"))
                 {
                     System.out.println("Opponent missed.");
+
+                    oppBoard[y][x] = "-";
                     
                     if(Battleship.misses[y][x] != 1)
                     {
@@ -241,7 +258,7 @@ public class Battleship
 
     }
 
-    // end game
+    // end game method
     public static void gameOver()
     {
         System.out.println("Your ships: " + Battleship.numPlayerShips + " | Opponent ships: " + Battleship.numOppShips);
@@ -255,8 +272,43 @@ public class Battleship
         }
     }
 
-    // display board
+    // display player board method
     public static void displayMap()
+    {
+        System.out.println();
+
+        // Top part of map (x-axis)
+        System.out.print("  ");
+        for(int i = 0; i < numCol; i++)
+        {
+            System.out.print(i);
+        }
+        System.out.println();
+
+        // Middle part of map (empty spaces & y-axis)
+        for(int x = 0; x < playerBoard.length; x++)
+        {
+            System.out.print(x + "|");
+
+            for(int y = 0; y < playerBoard[x].length; y++)
+            {
+                System.out.print(playerBoard[x][y]);
+            }
+            System.out.println("|" + x);
+        }
+
+        // Bottom part of map (x-axis)
+        System.out.print("  ");
+        for(int i = 0; i < numCol; i++)
+        {
+            System.out.print(i);
+        }
+        System.out.println();
+
+    }
+
+    // testing to see if opponent board is correct
+    public static void displayOppMap()
     {
         System.out.println();
 
@@ -269,15 +321,15 @@ public class Battleship
         System.out.println();
 
         // Middle section of map
-        for(int x = 0; x < playerBoard.length; x++)
+        for(int y = 0; y < oppBoard.length; y++)
         {
-            System.out.print(x + "|");
+            System.out.print(y + "|");
 
-            for(int y = 0; y < playerBoard[x].length; y++)
+            for(int x = 0; x < oppBoard[y].length; x++)
             {
-                System.out.print(playerBoard[x][y]);
+                System.out.print(oppBoard[y][x]);
             }
-            System.out.println("|" + x);
+            System.out.println("|" + y);
         }
 
         // Last section of map
@@ -289,6 +341,8 @@ public class Battleship
         System.out.println();
 
     }
+
+
 
 
     
